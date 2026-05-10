@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bandle</title>
+  <link href="https://fonts.googleapis.com/css2?family=Clear+Sans:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header>
+  <svg class="hdr-icon" viewBox="0 0 448 512" aria-hidden="true"><path fill="currentColor" d="M0 32L0 45.6C0 62.7 1.7 79.6 5 96l352.8 0c3.2-6.9 7.5-13.3 13-18.8l38.6-38.6c4.2-4.2 6.6-10 6.6-16C416 10.1 405.9 0 393.4 0L32 0C14.3 0 0 14.3 0 32zm352.2 96L13.6 128c12.2 35.9 32.3 68.7 58.8 96L412 224l-47.2-62.9c-7.3-9.7-11.6-21.2-12.6-33.1zm-226 138.2l116.4 68.5c8.2 4.8 15.8 10.7 22.5 17.3L445 352c2-9.8 3-19.9 3-30.1c0-23-5.3-45.5-15.3-65.9l-322.5 0c5.2 3.6 10.5 7 16 10.2zM288 384c10.3 21.4 13.8 45.5 9.9 69l-5.9 35.7c-2 12.2 7.4 23.4 19.8 23.4c5.3 0 10.4-2.1 14.2-5.9l78.2-78.2c12.8-12.8 23.1-27.7 30.4-43.9L288 384z"/></svg>
+  <div class="hdr-title">Bandle</div>
+  <div class="hdr-spacer"></div>
+</header>
+
+<div id="day-nav"></div>
+<div id="day-label"></div>
+<div id="solved-banner"></div>
+<div id="grid-container"></div>
+<div id="space-hint">Space is not a letter</div>
+<div id="hint-row">
+  <button id="hint-btn">Use a hint</button>
+  <div id="hint-display">
+    <span class="hint-emoji" id="hint-emoji"></span>
+    <span class="hint-label">Hint used</span>
+  </div>
+</div>
+<div id="keyboard">
+  <div class="key-row" id="row1"></div>
+  <div class="key-row" id="row2"></div>
+  <div class="key-row" id="row3"></div>
+  <div class="key-row" id="row4"></div>
+</div>
+<footer>ISUCF'V'MB &middot; Cyclone Marching Band</footer>
+
+<div id="toast"></div>
+
+<div id="modal-overlay">
+  <div id="modal">
+    <svg class="modal-icon" viewBox="0 0 448 512" aria-hidden="true"><path fill="currentColor" d="M0 32L0 45.6C0 62.7 1.7 79.6 5 96l352.8 0c3.2-6.9 7.5-13.3 13-18.8l38.6-38.6c4.2-4.2 6.6-10 6.6-16C416 10.1 405.9 0 393.4 0L32 0C14.3 0 0 14.3 0 32zm352.2 96L13.6 128c12.2 35.9 32.3 68.7 58.8 96L412 224l-47.2-62.9c-7.3-9.7-11.6-21.2-12.6-33.1zm-226 138.2l116.4 68.5c8.2 4.8 15.8 10.7 22.5 17.3L445 352c2-9.8 3-19.9 3-30.1c0-23-5.3-45.5-15.3-65.9l-322.5 0c5.2 3.6 10.5 7 16 10.2zM288 384c10.3 21.4 13.8 45.5 9.9 69l-5.9 35.7c-2 12.2 7.4 23.4 19.8 23.4c5.3 0 10.4-2.1 14.2-5.9l78.2-78.2c12.8-12.8 23.1-27.7 30.4-43.9L288 384z"/></svg>
+    <h2 id="modal-heading">You got it!</h2>
+    <div id="modal-word"></div>
+    <div id="modal-desc"></div>
+    <div id="modal-grid"></div>
+    <button id="copy-btn">Share result</button>
+    <button id="close-modal-btn">Close</button>
+  </div>
+</div>
+
+<script src="js/config.js"></script>
+<script src="js/game.js"></script>
+</body>
+</html>
