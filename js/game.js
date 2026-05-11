@@ -7,7 +7,7 @@ let gameOver = false;
 let hintUsed = false;
 let keyStates = {};
 
-function storageKey(d) { return `bandle_day_${d}`; }
+function storageKey(d) { return `bandle_v2_day_${d}`; }
 
 function loadDay(d) {
   try { const r = localStorage.getItem(storageKey(d)); return r ? JSON.parse(r) : null; }
@@ -24,8 +24,19 @@ function getAvailableDays() {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const diff = Math.floor((today - launch) / 86400000);
-  return Math.min(Math.max(diff + 1, 1), SHOWS.length);
+  return Math.min(Math.max(diff + 1, 1), WORDS.length);
 }
+
+function getDayDate(dayIndex) {
+  const [y, m, d] = LAUNCH_DATE.split('-').map(Number);
+  const date = new Date(y, m - 1, d);
+  date.setDate(date.getDate() + dayIndex);
+  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+function getWord() { return WORDS[currentDay][0]; }
+function getHint() { return WORDS[currentDay][1]; }
+function getDesc() { return WORDS[currentDay][2] || ''; }
 
 function computeResult(guess, answer) {
   const result = Array(answer.length).fill('absent');
@@ -50,20 +61,14 @@ function updateKeyStates(guess, result) {
 }
 
 function buildGrid() {
-  const show = SHOWS[currentDay];
+  const word = getWord();
   const container = document.getElementById('grid-container');
   container.innerHTML = '';
-  document.getElementById('space-hint').style.display = show.hasSpace ? 'block' : 'none';
   for (let r = 0; r < MAX_GUESSES; r++) {
     const row = document.createElement('div');
     row.className = 'grid-row';
     row.id = `row-${r}`;
-    for (let c = 0; c < show.word.length; c++) {
-      if (show.hasSpace && c === show.spaceAfter) {
-        const g = document.createElement('div');
-        g.className = 'tile space-gap';
-        row.appendChild(g);
-      }
+    for (let c = 0; c < word.length; c++) {
       const tile = document.createElement('div');
       tile.className = 'tile';
       tile.id = `tile-${r}-${c}`;
@@ -74,10 +79,10 @@ function buildGrid() {
 }
 
 function renderGuesses() {
-  const show = SHOWS[currentDay];
+  const word = getWord();
   guesses.forEach((guess, r) => {
     const res = results[r];
-    for (let c = 0; c < show.word.length; c++) {
+    for (let c = 0; c < word.length; c++) {
       const t = document.getElementById(`tile-${r}-${c}`);
       if (t) {
         t.textContent = guess[c];
@@ -89,10 +94,10 @@ function renderGuesses() {
 }
 
 function renderCurrentGuess() {
-  const show = SHOWS[currentDay];
+  const word = getWord();
   const r = guesses.length;
   if (r >= MAX_GUESSES) return;
-  for (let c = 0; c < show.word.length; c++) {
+  for (let c = 0; c < word.length; c++) {
     const t = document.getElementById(`tile-${r}-${c}`);
     if (!t) continue;
     const ch = currentGuess[c] || '';
@@ -120,31 +125,16 @@ function renderKeyboard() {
 }
 
 function renderDayNav() {
-  const nav = document.getElementById('day-nav');
-  nav.innerHTML = '';
   const available = getAvailableDays();
-  for (let i = 0; i < SHOWS.length; i++) {
-    const btn = document.createElement('button');
-    btn.className = 'day-btn';
-    btn.dataset.day = i;
-    if (i < available) {
-      const saved = loadDay(i);
-      btn.textContent = `Day ${i + 1}`;
-      if (saved && saved.gameOver) btn.classList.add('solved');
-      if (i === currentDay) btn.classList.add('active');
-      btn.addEventListener('click', () => switchDay(i));
-    } else {
-      btn.textContent = '🔒';
-      btn.style.opacity = '0.3';
-      btn.style.cursor = 'default';
-      btn.title = 'Not yet available';
-    }
-    nav.appendChild(btn);
-  }
-}
+  const saved = loadDay(currentDay);
+  const solved = saved && saved.gameOver;
 
-function renderDayLabel() {
-  document.getElementById('day-label').textContent = `Day ${currentDay + 1} of ${SHOWS.length}`;
+  document.getElementById('day-number').textContent =
+    `Day ${currentDay + 1}` + (solved ? ' ✓' : '');
+  document.getElementById('day-date').textContent = getDayDate(currentDay);
+
+  document.getElementById('prev-day').disabled = currentDay <= 0;
+  document.getElementById('next-day').disabled = currentDay >= available - 1;
 }
 
 function updateSolvedBanner() {
@@ -159,14 +149,13 @@ function updateSolvedBanner() {
 }
 
 function updateHintUI() {
-  const show = SHOWS[currentDay];
   const hb = document.getElementById('hint-btn');
   const hd = document.getElementById('hint-display');
   const onLast = guesses.length === MAX_GUESSES - 1 && !gameOver;
   if (hintUsed) {
     hb.style.display = 'none';
     hd.style.display = 'flex';
-    document.getElementById('hint-emoji').textContent = show.hint;
+    document.getElementById('hint-emoji').textContent = getHint();
   } else if (onLast) {
     hb.style.display = 'inline-block';
     hd.style.display = 'none';
@@ -182,14 +171,13 @@ function renderAll() {
   renderCurrentGuess();
   renderKeyboard();
   renderDayNav();
-  renderDayLabel();
   updateHintUI();
   updateSolvedBanner();
 }
 
 function handleKey(key) {
   if (gameOver) return;
-  const wordLen = SHOWS[currentDay].word.length;
+  const wordLen = getWord().length;
   if (key === '⌫' || key === 'Backspace') { currentGuess.pop(); renderCurrentGuess(); return; }
   if (key === 'ENTER' || key === 'Enter') { submitGuess(); return; }
   if (/^[A-Za-z]$/.test(key) && currentGuess.length < wordLen) {
@@ -206,11 +194,11 @@ document.addEventListener('keydown', e => {
 });
 
 function submitGuess() {
-  const show = SHOWS[currentDay];
-  const wordLen = show.word.length;
+  const word = getWord();
+  const wordLen = word.length;
   if (currentGuess.length < wordLen) { shakeRow(guesses.length); toast('Not enough letters'); return; }
   const guessStr = currentGuess.join('');
-  const result = computeResult(guessStr, show.word);
+  const result = computeResult(guessStr, word);
   updateKeyStates(guessStr, result);
   guesses.push(guessStr);
   results.push(result);
@@ -219,7 +207,7 @@ function submitGuess() {
     if (t) setTimeout(() => { t.className = `tile ${result[c]}`; }, c * 80);
   }
   currentGuess = [];
-  const won = guessStr === show.word;
+  const won = guessStr === word;
   const lost = !won && guesses.length >= MAX_GUESSES;
   if (won || lost) {
     gameOver = true;
@@ -262,20 +250,25 @@ function buildShareGrid() {
   }).join('\n');
 }
 
+function updateModalDesc() {
+  const desc = getDesc();
+  const el = document.getElementById('modal-desc');
+  if (desc) { el.textContent = desc; el.style.display = 'block'; }
+  else { el.style.display = 'none'; }
+}
+
 function showModal() {
-  const show = SHOWS[currentDay];
   document.getElementById('modal-heading').textContent = 'You got it!';
-  document.getElementById('modal-word').textContent = show.displayWord;
-  document.getElementById('modal-desc').textContent = show.desc;
+  document.getElementById('modal-word').textContent = getWord();
+  updateModalDesc();
   document.getElementById('modal-grid').innerHTML = buildShareGrid().replace(/\n/g, '<br>');
   document.getElementById('modal-overlay').classList.add('show');
 }
 
 function showLossModal() {
-  const show = SHOWS[currentDay];
   document.getElementById('modal-heading').textContent = 'Nice try!';
-  document.getElementById('modal-word').textContent = `The answer was: ${show.displayWord}`;
-  document.getElementById('modal-desc').textContent = show.desc;
+  document.getElementById('modal-word').textContent = `The answer was: ${getWord()}`;
+  updateModalDesc();
   document.getElementById('modal-grid').innerHTML = buildShareGrid().replace(/\n/g, '<br>');
   document.getElementById('modal-overlay').classList.add('show');
 }
@@ -289,8 +282,8 @@ document.getElementById('modal-overlay').addEventListener('click', function (e) 
 });
 
 document.getElementById('copy-btn').addEventListener('click', () => {
-  const show = SHOWS[currentDay];
-  const won = guesses[guesses.length - 1] === show.word;
+  const word = getWord();
+  const won = guesses[guesses.length - 1] === word;
   const score = won ? `${guesses.length}/${MAX_GUESSES}` : `X/${MAX_GUESSES}`;
   const text = `Bandle — Day ${currentDay + 1}\n${score}${hintUsed ? ' 🌪️' : ''}\n\n${buildShareGrid()}\n\nISUCF'V'MB Cyclone Marching Band`;
   navigator.clipboard.writeText(text).then(() => toast('Copied!')).catch(() => toast('Copy failed'));
@@ -299,8 +292,16 @@ document.getElementById('copy-btn').addEventListener('click', () => {
 document.getElementById('hint-btn').addEventListener('click', () => {
   hintUsed = true;
   saveState();
-  toast(`Hint: ${SHOWS[currentDay].hint}`, 2500);
+  toast(`Hint: ${getHint()}`, 2500);
   updateHintUI();
+});
+
+document.getElementById('prev-day').addEventListener('click', () => {
+  if (currentDay > 0) switchDay(currentDay - 1);
+});
+
+document.getElementById('next-day').addEventListener('click', () => {
+  if (currentDay < getAvailableDays() - 1) switchDay(currentDay + 1);
 });
 
 function saveState() {
@@ -332,7 +333,7 @@ function switchDay(day) {
 }
 
 function init() {
-  currentDay = Math.min(getAvailableDays() - 1, SHOWS.length - 1);
+  currentDay = Math.min(getAvailableDays() - 1, WORDS.length - 1);
   loadState();
   renderAll();
 }

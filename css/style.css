@@ -67,59 +67,58 @@ header {
 /* DAY NAV */
 #day-nav {
   display: flex;
-  gap: 5px;
-  flex-wrap: wrap;
+  align-items: center;
   justify-content: center;
+  gap: 16px;
   max-width: 500px;
   width: 100%;
   padding: 0 16px;
   margin-bottom: 10px;
 }
 
-.day-btn {
+.nav-arrow {
   font-family: var(--font);
-  font-size: 0.72rem;
+  font-size: 1.4rem;
   font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  padding: 4px 10px;
-  border-radius: 2px;
+  width: 36px;
+  height: 36px;
+  border-radius: 4px;
   border: 1px solid var(--border-empty);
   background: transparent;
-  color: var(--subtext);
+  color: var(--text);
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   transition: all 0.1s;
 }
 
-.day-btn:hover {
+.nav-arrow:hover:not(:disabled) {
   border-color: var(--text);
-  color: var(--text);
 }
 
-.day-btn.active {
-  border-color: var(--text);
-  color: var(--text);
+.nav-arrow:disabled {
+  opacity: 0.2;
+  cursor: default;
 }
 
-.day-btn.solved {
-  border-color: var(--correct);
-  color: var(--correct);
+#day-info {
+  text-align: center;
+  min-width: 140px;
 }
 
-.day-btn.active.solved {
-  background: var(--correct);
-  border-color: var(--correct);
-  color: #fff;
-}
-
-/* DAY LABEL */
-#day-label {
-  font-size: 0.72rem;
+#day-number {
+  font-size: 0.82rem;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
+}
+
+#day-date {
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
   color: var(--subtext);
-  margin-bottom: 10px;
+  margin-top: 2px;
 }
 
 /* SOLVED BANNER */
@@ -218,17 +217,6 @@ header {
 
 .shake {
   animation: shake 0.35s ease;
-}
-
-/* SPACE HINT */
-#space-hint {
-  display: none;
-  font-size: 0.67rem;
-  color: var(--subtext);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  margin-top: -10px;
-  margin-bottom: 8px;
 }
 
 /* HINT ROW */
@@ -419,6 +407,7 @@ header {
 }
 
 #modal-desc {
+  display: none;
   font-size: 0.88rem;
   line-height: 1.6;
   color: #d7dadc;

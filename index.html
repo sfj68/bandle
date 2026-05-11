@@ -15,11 +15,18 @@
   <div class="hdr-spacer"></div>
 </header>
 
-<div id="day-nav"></div>
-<div id="day-label"></div>
+<div id="day-nav">
+  <button id="prev-day" class="nav-arrow" aria-label="Previous day">&#8249;</button>
+  <div id="day-info">
+    <div id="day-number"></div>
+    <div id="day-date"></div>
+  </div>
+  <button id="next-day" class="nav-arrow" aria-label="Next day">&#8250;</button>
+</div>
+
 <div id="solved-banner"></div>
 <div id="grid-container"></div>
-<div id="space-hint">Space is not a letter</div>
+
 <div id="hint-row">
   <button id="hint-btn">Use a hint</button>
   <div id="hint-display">
@@ -27,12 +34,14 @@
     <span class="hint-label">Hint used</span>
   </div>
 </div>
+
 <div id="keyboard">
   <div class="key-row" id="row1"></div>
   <div class="key-row" id="row2"></div>
   <div class="key-row" id="row3"></div>
   <div class="key-row" id="row4"></div>
 </div>
+
 <footer>ISUCF'V'MB &middot; Cyclone Marching Band</footer>
 
 <div id="toast"></div>
@@ -50,6 +59,7 @@
 </div>
 
 <script src="js/config.js"></script>
+<script src="js/words.js"></script>
 <script src="js/game.js"></script>
 </body>
 </html>

@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bandle Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Clear+Sans:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #121213;
+    --text: #ffffff;
+    --subtext: #818384;
+    --divider: #3a3a3c;
+    --modal-bg: #1a1a1b;
+    --cardinal: #C8102E;
+    --gold: #F1BE48;
+    --correct: #538d4e;
+    --font: 'Clear Sans', 'Helvetica Neue', Arial, sans-serif;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg); color: var(--text); font-family: var(--font);
+    display: flex; flex-direction: column; align-items: center; min-height: 100vh;
+    padding: 0 16px 40px;
+  }
+
+  header {
+    width: 100%; max-width: 720px; height: 50px;
+    display: flex; align-items: center; justify-content: center;
+    border-bottom: 1px solid var(--divider); margin-bottom: 20px;
+  }
+  header h1 {
+    font-size: 1.2rem; font-weight: 700; letter-spacing: 0.15em;
+    text-transform: uppercase; color: var(--cardinal);
+  }
+
+  main { width: 100%; max-width: 720px; }
+
+  section { margin-bottom: 20px; }
+  label {
+    display: block; font-size: 0.7rem; font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--subtext); margin-bottom: 6px;
+  }
+  .help {
+    font-size: 0.68rem; color: var(--subtext); margin-top: 6px; line-height: 1.5;
+  }
+  .help a { color: var(--gold); }
+
+  .row { display: flex; gap: 8px; }
+
+  input[type="text"], input[type="password"] {
+    font-family: var(--font); font-size: 0.85rem;
+    background: var(--modal-bg); color: var(--text);
+    border: 1px solid var(--divider); border-radius: 4px;
+    padding: 8px 12px; flex: 1;
+  }
+  input:focus { outline: none; border-color: var(--gold); }
+
+  .btn {
+    font-family: var(--font); font-size: 0.75rem; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 8px 16px; border-radius: 4px; border: none;
+    cursor: pointer; white-space: nowrap; transition: opacity 0.1s;
+  }
+  .btn:hover { opacity: 0.85; }
+  .btn:disabled { opacity: 0.3; cursor: default; }
+  .btn-primary { background: var(--cardinal); color: #fff; }
+  .btn-secondary { background: var(--divider); color: var(--text); }
+  .btn-gold { background: var(--gold); color: #000; }
+  .btn-small {
+    font-size: 0.65rem; padding: 4px 10px; border-radius: 3px;
+  }
+
+  #status {
+    font-size: 0.75rem; font-weight: 700; letter-spacing: 0.06em;
+    min-height: 20px; margin-top: 8px;
+  }
+  .status-info { color: var(--subtext); }
+  .status-success { color: var(--correct); }
+  .status-error { color: var(--cardinal); }
+
+  #stats {
+    font-size: 0.68rem; color: var(--subtext);
+    letter-spacing: 0.08em; text-transform: uppercase; margin-top: 4px;
+  }
+
+  #search {
+    width: 100%; margin-bottom: 12px;
+  }
+
+  #table-wrap {
+    max-height: 60vh; overflow-y: auto; border: 1px solid var(--divider);
+    border-radius: 4px; margin-bottom: 12px;
+  }
+  table { width: 100%; border-collapse: collapse; }
+  thead { position: sticky; top: 0; z-index: 1; }
+  th {
+    font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--subtext);
+    background: var(--modal-bg); padding: 8px 6px; text-align: left;
+    border-bottom: 1px solid var(--divider);
+  }
+  td {
+    padding: 4px 6px; border-bottom: 1px solid var(--divider);
+    vertical-align: middle;
+  }
+  .col-day { width: 44px; text-align: center; font-size: 0.72rem; color: var(--subtext); }
+  .col-word { width: 120px; }
+  .col-hint { width: 60px; text-align: center; }
+  .col-desc { }
+  .col-actions { width: 36px; text-align: center; }
+
+  td input[type="text"] {
+    width: 100%; padding: 5px 8px; font-size: 0.8rem;
+    border: 1px solid transparent; background: transparent; color: var(--text);
+  }
+  td input[type="text"]:focus { border-color: var(--gold); background: var(--modal-bg); }
+
+  .hint-select {
+    font-size: 1.1rem; background: transparent; color: var(--text);
+    border: 1px solid transparent; border-radius: 3px;
+    padding: 2px; cursor: pointer; text-align: center; width: 44px;
+  }
+  .hint-select:focus { border-color: var(--gold); outline: none; }
+  .hint-select option { background: var(--modal-bg); font-size: 1.1rem; }
+
+  .delete-btn {
+    background: none; border: none; color: var(--subtext);
+    cursor: pointer; font-size: 0.9rem; padding: 4px;
+  }
+  .delete-btn:hover { color: var(--cardinal); }
+
+  #add-row { width: 100%; margin-bottom: 20px; }
+
+  .back-link {
+    display: inline-block; margin-top: 20px;
+    font-size: 0.68rem; color: var(--subtext);
+    letter-spacing: 0.08em; text-transform: uppercase;
+    text-decoration: none;
+  }
+  .back-link:hover { color: var(--text); }
+</style>
+</head>
+<body>
+
+<header><h1>Bandle Admin</h1></header>
+
+<main>
+  <section>
+    <label for="token">GitHub Personal Access Token</label>
+    <div class="row">
+      <input type="password" id="token" placeholder="ghp_...">
+      <button class="btn btn-secondary" id="save-token">Save</button>
+      <button class="btn btn-secondary" id="clear-token" style="display:none">Clear</button>
+    </div>
+    <p class="help">
+      Create a <a href="https://github.com/settings/tokens?type=beta" target="_blank">fine-grained token</a>
+      with <strong>Contents: Read and write</strong> access to your bandle repo.
+    </p>
+  </section>
+
+  <section>
+    <div class="row">
+      <button class="btn btn-secondary" id="load-btn">Load Words</button>
+      <button class="btn btn-primary" id="save-btn" disabled>Save &amp; Deploy</button>
+    </div>
+    <div id="status"></div>
+    <div id="stats"></div>
+  </section>
+
+  <input type="text" id="search" placeholder="Search words or descriptions...">
+
+  <div id="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th class="col-day">#</th>
+          <th class="col-word">Word</th>
+          <th class="col-hint">Hint</th>
+          <th class="col-desc">Description (optional)</th>
+          <th class="col-actions"></th>
+        </tr>
+      </thead>
+      <tbody id="word-body"></tbody>
+    </table>
+  </div>
+
+  <button class="btn btn-gold btn-small" id="add-btn" disabled>+ Add Word</button>
+
+  <a href="/" class="back-link">&larr; Back to game</a>
+</main>
+
+<script>
+const REPO = 'sfj68/bandle';
+const FILE_PATH = 'js/words.js';
+const API = 'https://api.github.com';
+const HINTS = ['🎵','🎺','🎷','🥁','🏟️','🌪️','🚩','⭐','🎭','🎯','🎹','🎶'];
+
+let words = [];
+let fileSha = '';
+let dirty = false;
+
+function getToken() { return localStorage.getItem('bandle_admin_token') || ''; }
+function setToken(t) { localStorage.setItem('bandle_admin_token', t); }
+function clearToken() { localStorage.removeItem('bandle_admin_token'); }
+
+function setStatus(msg, type) {
+  const el = document.getElementById('status');
+  el.textContent = msg;
+  el.className = 'status-' + (type || 'info');
+}
+
+async function fetchFile() {
+  const headers = {};
+  const token = getToken();
+  if (token) headers['Authorization'] = 'token ' + token;
+  const res = await fetch(API + '/repos/' + REPO + '/contents/' + FILE_PATH, { headers });
+  if (!res.ok) throw new Error('GitHub API ' + res.status + (res.status === 401 ? ' — check your token' : ''));
+  const data = await res.json();
+  fileSha = data.sha;
+  return decodeURIComponent(escape(atob(data.content.replace(/\n/g, ''))));
+}
+
+async function commitFile(content, message) {
+  const token = getToken();
+  if (!token) throw new Error('No GitHub token');
+  const encoded = btoa(unescape(encodeURIComponent(content)));
+  const res = await fetch(API + '/repos/' + REPO + '/contents/' + FILE_PATH, {
+    method: 'PUT',
+    headers: { 'Authorization': 'token ' + token, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ message: message, content: encoded, sha: fileSha })
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(function() { return {}; });
+    throw new Error(err.message || 'Commit failed: ' + res.status);
+  }
+  const data = await res.json();
+  fileSha = data.content.sha;
+}
+
+function parseWordsJS(content) {
+  var match = content.match(/const WORDS\s*=\s*(\[[\s\S]*\]);/);
+  if (!match) throw new Error('Could not parse WORDS array');
+  var raw = match[1];
+  raw = raw.replace(/\/\/[^\n]*/g, '');
+  raw = raw.replace(/,(\s*[\]\}])/g, '$1');
+  return JSON.parse(raw);
+}
+
+function generateWordsJS(entries) {
+  var lines = entries.map(function(e) { return '  ' + JSON.stringify(e); });
+  return 'const WORDS = [\n' + lines.join(',\n') + '\n];\n';
+}
+
+function renderTable(filter) {
+  var tbody = document.getElementById('word-body');
+  tbody.innerHTML = '';
+  var lower = (filter || '').toLowerCase();
+
+  words.forEach(function(entry, i) {
+    var word = entry[0], hint = entry[1], desc = entry[2] || '';
+    if (lower && word.toLowerCase().indexOf(lower) === -1 && desc.toLowerCase().indexOf(lower) === -1) return;
+
+    var tr = document.createElement('tr');
+
+    var tdDay = document.createElement('td');
+    tdDay.className = 'col-day';
+    tdDay.textContent = i + 1;
+
+    var tdWord = document.createElement('td');
+    tdWord.className = 'col-word';
+    var wordInput = document.createElement('input');
+    wordInput.type = 'text';
+    wordInput.value = word;
+    wordInput.dataset.index = i;
+    wordInput.dataset.field = 'word';
+    tdWord.appendChild(wordInput);
+
+    var tdHint = document.createElement('td');
+    tdHint.className = 'col-hint';
+    var sel = document.createElement('select');
+    sel.className = 'hint-select';
+    sel.dataset.index = i;
+    HINTS.forEach(function(h) {
+      var opt = document.createElement('option');
+      opt.textContent = h;
+      if (h === hint) opt.selected = true;
+      sel.appendChild(opt);
+    });
+    if (HINTS.indexOf(hint) === -1) {
+      var custom = document.createElement('option');
+      custom.textContent = hint;
+      custom.selected = true;
+      sel.appendChild(custom);
+    }
+    tdHint.appendChild(sel);
+
+    var tdDesc = document.createElement('td');
+    tdDesc.className = 'col-desc';
+    var descInput = document.createElement('input');
+    descInput.type = 'text';
+    descInput.value = desc;
+    descInput.placeholder = 'Optional description';
+    descInput.dataset.index = i;
+    descInput.dataset.field = 'desc';
+    tdDesc.appendChild(descInput);
+
+    var tdAct = document.createElement('td');
+    tdAct.className = 'col-actions';
+    var del = document.createElement('button');
+    del.className = 'delete-btn';
+    del.textContent = '✕';
+    del.dataset.index = i;
+    tdAct.appendChild(del);
+
+    tr.appendChild(tdDay);
+    tr.appendChild(tdWord);
+    tr.appendChild(tdHint);
+    tr.appendChild(tdDesc);
+    tr.appendChild(tdAct);
+    tbody.appendChild(tr);
+  });
+
+  document.getElementById('stats').textContent = words.length + ' words · covers ' + words.length + ' days';
+}
+
+function markDirty() {
+  dirty = true;
+  document.getElementById('save-btn').disabled = false;
+}
+
+// Token UI
+function updateTokenUI() {
+  var has = !!getToken();
+  document.getElementById('token').value = has ? '••••••••' : '';
+  document.getElementById('clear-token').style.display = has ? '' : 'none';
+}
+
+document.getElementById('save-token').addEventListener('click', function() {
+  var v = document.getElementById('token').value.trim();
+  if (!v || v === '••••••••') return;
+  setToken(v);
+  updateTokenUI();
+  setStatus('Token saved', 'success');
+});
+
+document.getElementById('clear-token').addEventListener('click', function() {
+  clearToken();
+  updateTokenUI();
+  setStatus('Token cleared', 'info');
+});
+
+// Load
+document.getElementById('load-btn').addEventListener('click', async function() {
+  try {
+    setStatus('Loading...');
+    var content = await fetchFile();
+    words = parseWordsJS(content);
+    renderTable();
+    document.getElementById('add-btn').disabled = false;
+    setStatus('Loaded ' + words.length + ' words', 'success');
+    dirty = false;
+  } catch (e) {
+    setStatus('Error: ' + e.message, 'error');
+  }
+});
+
+// Save
+document.getElementById('save-btn').addEventListener('click', async function() {
+  if (!confirm('Save ' + words.length + ' words and deploy to production?')) return;
+  try {
+    setStatus('Saving...');
+    var content = generateWordsJS(words);
+    await commitFile(content, 'Update word list (' + words.length + ' words)');
+    setStatus('Saved! Vercel will deploy in ~10 seconds.', 'success');
+    dirty = false;
+    document.getElementById('save-btn').disabled = true;
+  } catch (e) {
+    setStatus('Error: ' + e.message, 'error');
+  }
+});
+
+// Add word
+document.getElementById('add-btn').addEventListener('click', function() {
+  words.push(['NEWWORD', '🎵']);
+  markDirty();
+  renderTable(document.getElementById('search').value);
+  var wrap = document.getElementById('table-wrap');
+  wrap.scrollTop = wrap.scrollHeight;
+});
+
+// Table input events
+document.getElementById('word-body').addEventListener('input', function(e) {
+  var idx = e.target.dataset.index;
+  var field = e.target.dataset.field;
+  if (idx === undefined || !field) return;
+  var i = parseInt(idx);
+
+  if (field === 'word') {
+    words[i][0] = e.target.value.toUpperCase().replace(/[^A-Z]/g, '');
+    e.target.value = words[i][0];
+  } else if (field === 'desc') {
+    var val = e.target.value;
+    if (val) {
+      if (words[i].length < 3) words[i].push(val);
+      else words[i][2] = val;
+    } else {
+      if (words[i].length === 3) words[i].pop();
+    }
+  }
+  markDirty();
+});
+
+document.getElementById('word-body').addEventListener('change', function(e) {
+  if (e.target.classList.contains('hint-select')) {
+    var i = parseInt(e.target.dataset.index);
+    words[i][1] = e.target.value;
+    markDirty();
+  }
+});
+
+// Delete
+document.getElementById('word-body').addEventListener('click', function(e) {
+  if (!e.target.classList.contains('delete-btn')) return;
+  var i = parseInt(e.target.dataset.index);
+  if (!confirm('Delete Day ' + (i + 1) + ': ' + words[i][0] + '?')) return;
+  words.splice(i, 1);
+  markDirty();
+  renderTable(document.getElementById('search').value);
+});
+
+// Search
+document.getElementById('search').addEventListener('input', function(e) {
+  renderTable(e.target.value);
+});
+
+// Unsaved changes warning
+window.addEventListener('beforeunload', function(e) {
+  if (dirty) { e.preventDefault(); e.returnValue = ''; }
+});
+
+updateTokenUI();
+</script>
+</body>
+</html>
