@@ -310,7 +310,7 @@ document.getElementById('copy-btn').addEventListener('click', () => {
   const word = getWord();
   const won = guesses[guesses.length - 1] === word;
   const score = won ? `${guesses.length}/${MAX_GUESSES}` : `X/${MAX_GUESSES}`;
-  const text = `Bandle — Day ${currentDay + 1}\n${score}${hintUsed ? ' 🌪️' : ''}\n\n${buildShareGrid()}\n\n#isucfvmb #cyclonenation #marchingband\n\nPlay Bandle at https://bandle.iastate.band`;
+  const text = `Bandle — Day ${currentDay + 1}\n${score}${hintUsed ? ' 🌪️' : ''}\n\n${buildShareGrid()}\n\n@isucfvmb\n#isucfvmb #cyclonenation #marchingband\n\nPlay Bandle at https://bandle.iastate.band`;
   navigator.clipboard.writeText(text).then(() => toast('Copied!')).catch(() => toast('Copy failed'));
 });
 
@@ -328,7 +328,7 @@ document.getElementById('image-btn').addEventListener('click', () => {
   const pad = 40;
   const w = gridW + pad * 2;
   const topH = 130;
-  const botH = 100;
+  const botH = 120;
   const h = topH + gridH + botH;
   const c = document.createElement('canvas');
   c.width = w * 2; c.height = h * 2;
@@ -383,13 +383,16 @@ document.getElementById('image-btn').addEventListener('click', () => {
       ctx.fill();
     });
   });
+  ctx.fillStyle = '#ffffff';
+  ctx.font = 'bold 12px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('@isucfvmb', w / 2, topH + gridH + 28);
   ctx.fillStyle = '#9a7078';
   ctx.font = '11px sans-serif';
-  ctx.textAlign = 'center';
-  ctx.fillText('#isucfvmb  #cyclonenation  #marchingband', w / 2, topH + gridH + 30);
+  ctx.fillText('#isucfvmb  #cyclonenation  #marchingband', w / 2, topH + gridH + 50);
   ctx.fillStyle = '#F1BE48';
   ctx.font = 'bold 12px sans-serif';
-  ctx.fillText('Play at bandle.iastate.band', w / 2, topH + gridH + 52);
+  ctx.fillText('Play at bandle.iastate.band', w / 2, topH + gridH + 72);
   c.toBlob(blob => {
     const file = new File([blob], `bandle-day-${currentDay + 1}.png`, { type: 'image/png' });
     if (navigator.canShare && navigator.canShare({ files: [file] })) {
