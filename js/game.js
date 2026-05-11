@@ -222,6 +222,8 @@ function submitGuess() {
   const wordLen = word.length;
   if (currentGuess.length < wordLen) { shakeRow(guesses.length); toast('Not enough letters'); return; }
   const guessStr = currentGuess.join('');
+  const isAnswer = WORDS.some(w => w[0] === guessStr);
+  if (!isAnswer && !DICT.has(guessStr)) { shakeRow(guesses.length); toast('Not in word list'); return; }
   const result = computeResult(guessStr, word);
   updateKeyStates(guessStr, result);
   guesses.push(guessStr);
