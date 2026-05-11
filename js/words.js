@@ -1,5 +1,5 @@
 const WORDS = [
-  ["COUNTRY","🤠","Jack Trice Stadium has welcomed some of the biggest names in country music over the past few years, and now it's the Cyclone Marching Band's turn. We're bringing the big, bold, country sound to one of our 2026 halftime shows this season!"],
+  ["COUNTRY","🤠","Jack Trice Stadium has welcomed some of the biggest names in country music over the past few years, and now it's the Cyclone Marching Band's turn. We're bringing the big, bold, country sound to one of our 2026 halftime shows!"],
   ["SPACE","🚀","The Cyclone Marching Band ventures beyond the atmosphere in a halftime show that's as vast and awe-inspiring as the universe itself. Amaze. Amaze. Amaze."],
   ["POPHITS","🎵","No nostalgia here. For this show, we are bringing you the stuff that's dominating the charts right now. The Cyclone Marching Band performs the pop hits you've been streaming on repeat from this past year.",2],
   ["SILVER","🎬","The silver screen turns 25! We're celebrating the iconic films hitting their quarter-century milestone with a show that's as cinematic as it gets. A silver anniversary deserves a silver performance from the Cyclone Marching Band!"],
