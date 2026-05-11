@@ -391,13 +391,18 @@ document.getElementById('image-btn').addEventListener('click', () => {
   ctx.font = 'bold 12px sans-serif';
   ctx.fillText('Play at bandle.iastate.band', w / 2, topH + gridH + 52);
   c.toBlob(blob => {
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `bandle-day-${currentDay + 1}.png`;
-    a.click();
-    URL.revokeObjectURL(url);
-    toast('Image saved!');
+    const file = new File([blob], `bandle-day-${currentDay + 1}.png`, { type: 'image/png' });
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      navigator.share({ files: [file] }).then(() => toast('Shared!')).catch(() => {});
+    } else {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = file.name;
+      a.click();
+      URL.revokeObjectURL(url);
+      toast('Image saved!');
+    }
   });
 });
 
