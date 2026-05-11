@@ -303,7 +303,7 @@ document.getElementById('copy-btn').addEventListener('click', () => {
   const word = getWord();
   const won = guesses[guesses.length - 1] === word;
   const score = won ? `${guesses.length}/${MAX_GUESSES}` : `X/${MAX_GUESSES}`;
-  const text = `Bandle — Day ${currentDay + 1}\n${score}${hintUsed ? ' 🌪️' : ''}\n\n${buildShareGrid()}\n\n#isucfvmb #cyclonenation #marchingband\n\nLearn more about the Cyclone Marching Band at https://iastate.band/home`;
+  const text = `Bandle — Day ${currentDay + 1}\n${score}${hintUsed ? ' 🌪️' : ''}\n\n${buildShareGrid()}\n\n#isucfvmb #cyclonenation #marchingband\n\nPlay Bandle at https://bandle.iastate.band`;
   navigator.clipboard.writeText(text).then(() => toast('Copied!')).catch(() => toast('Copy failed'));
 });
 
