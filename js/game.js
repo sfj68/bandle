@@ -38,6 +38,7 @@ function getWord() { return WORDS[currentDay][0]; }
 function getHint() { return WORDS[currentDay][1]; }
 function getDesc() { return WORDS[currentDay][2] || ''; }
 function getGapAfter() { return WORDS[currentDay][3] ?? -1; }
+function getMaxGuesses() { return getWord().length; }
 
 function computeResult(guess, answer) {
   const result = Array(answer.length).fill('absent');
@@ -66,7 +67,7 @@ function buildGrid() {
   const gapAfter = getGapAfter();
   const container = document.getElementById('grid-container');
   container.innerHTML = '';
-  for (let r = 0; r < MAX_GUESSES; r++) {
+  for (let r = 0; r < getMaxGuesses(); r++) {
     const row = document.createElement('div');
     row.className = 'grid-row';
     row.id = `row-${r}`;
@@ -103,7 +104,7 @@ function renderGuesses() {
 function renderCurrentGuess() {
   const word = getWord();
   const r = guesses.length;
-  if (r >= MAX_GUESSES) return;
+  if (r >= getMaxGuesses()) return;
   for (let c = 0; c < word.length; c++) {
     const t = document.getElementById(`tile-${r}-${c}`);
     if (!t) continue;
@@ -158,7 +159,7 @@ function updateSolvedBanner() {
 function updateHintUI() {
   const hb = document.getElementById('hint-btn');
   const hd = document.getElementById('hint-display');
-  const onLast = guesses.length === MAX_GUESSES - 1 && !gameOver;
+  const onLast = guesses.length === getMaxGuesses() - 1 && !gameOver;
   if (hintUsed) {
     hb.style.display = 'none';
     hd.style.display = 'flex';
@@ -275,7 +276,7 @@ async function submitGuess() {
   }
   currentGuess = [];
   const won = guessStr === word;
-  const lost = !won && guesses.length >= MAX_GUESSES;
+  const lost = !won && guesses.length >= getMaxGuesses();
   if (won || lost) {
     gameOver = true;
     saveState();
@@ -313,7 +314,7 @@ function buildShareGrid() {
   const map = { correct: '🟥', present: '🟨', absent: '⬜' };
   return results.map((res, ri) => {
     let l = res.map(r => map[r]).join('');
-    if (ri === MAX_GUESSES - 1 && hintUsed) l += ' 🌪️';
+    if (ri === results.length - 1 && hintUsed) l += ' 🌪️';
     return l;
   }).join('\n');
 }
@@ -352,7 +353,7 @@ document.getElementById('modal-overlay').addEventListener('click', function (e) 
 document.getElementById('copy-btn').addEventListener('click', () => {
   const word = getWord();
   const won = guesses[guesses.length - 1] === word;
-  const score = won ? `${guesses.length}/${MAX_GUESSES}` : `X/${MAX_GUESSES}`;
+  const score = won ? `${guesses.length}/${getMaxGuesses()}` : `X/${getMaxGuesses()}`;
   const text = `Bandle — Day ${currentDay + 1}\n${score}${hintUsed ? ' 🌪️' : ''}\n\n${buildShareGrid()}\n\n@isucfvmb\n#isucfvmb #cyclonenation #marchingband\n\nPlay Bandle at https://bandle.iastate.band`;
   navigator.clipboard.writeText(text).then(() => toast('Copied!')).catch(() => toast('Copy failed'));
 });
@@ -360,7 +361,7 @@ document.getElementById('copy-btn').addEventListener('click', () => {
 document.getElementById('image-btn').addEventListener('click', () => {
   const word = getWord();
   const won = guesses[guesses.length - 1] === word;
-  const score = won ? `${guesses.length}/${MAX_GUESSES}` : `X/${MAX_GUESSES}`;
+  const score = won ? `${guesses.length}/${getMaxGuesses()}` : `X/${getMaxGuesses()}`;
   const colors = { correct: '#C8102E', present: '#F1BE48', absent: '#787c7e' };
   const tileSize = 52;
   const gap = 6;
