@@ -307,6 +307,93 @@ document.getElementById('copy-btn').addEventListener('click', () => {
   navigator.clipboard.writeText(text).then(() => toast('Copied!')).catch(() => toast('Copy failed'));
 });
 
+document.getElementById('image-btn').addEventListener('click', () => {
+  const word = getWord();
+  const won = guesses[guesses.length - 1] === word;
+  const score = won ? `${guesses.length}/${MAX_GUESSES}` : `X/${MAX_GUESSES}`;
+  const colors = { correct: '#C8102E', present: '#F1BE48', absent: '#787c7e' };
+  const tileSize = 52;
+  const gap = 6;
+  const cols = word.length;
+  const rows = results.length;
+  const gridW = cols * tileSize + (cols - 1) * gap;
+  const gridH = rows * tileSize + (rows - 1) * gap;
+  const pad = 40;
+  const w = gridW + pad * 2;
+  const topH = 130;
+  const botH = 100;
+  const h = topH + gridH + botH;
+  const c = document.createElement('canvas');
+  c.width = w * 2; c.height = h * 2;
+  const ctx = c.getContext('2d');
+  ctx.scale(2, 2);
+  ctx.fillStyle = '#1a0a0e';
+  ctx.fillRect(0, 0, w, h);
+  ctx.fillStyle = '#C8102E';
+  ctx.font = 'bold 28px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('BANDLE', w / 2, 40);
+  ctx.fillStyle = '#ffffff';
+  ctx.font = 'bold 14px sans-serif';
+  ctx.fillText(`Day ${currentDay + 1}  —  ${score}${hintUsed ? '  🌪️' : ''}`, w / 2, 68);
+  ctx.fillStyle = '#9a7078';
+  ctx.font = '11px sans-serif';
+  ctx.fillText(getDayDate(currentDay), w / 2, 88);
+  const legendY = 110;
+  const sw = 12;
+  const legendItems = [
+    { color: colors.correct, label: 'Correct' },
+    { color: colors.present, label: 'Wrong spot' },
+    { color: colors.absent, label: 'Not in word' }
+  ];
+  ctx.font = 'bold 10px sans-serif';
+  ctx.textBaseline = 'middle';
+  const itemGap = 16;
+  const innerGap = 6;
+  const totalLegendW = legendItems.reduce((sum, item) => sum + sw + innerGap + ctx.measureText(item.label).width, 0) + itemGap * (legendItems.length - 1);
+  let lx = (w - totalLegendW) / 2;
+  legendItems.forEach((item, i) => {
+    ctx.fillStyle = item.color;
+    ctx.beginPath();
+    ctx.roundRect(lx, legendY - sw / 2, sw, sw, 2);
+    ctx.fill();
+    ctx.fillStyle = '#9a7078';
+    ctx.textAlign = 'left';
+    ctx.fillText(item.label, lx + sw + innerGap, legendY);
+    lx += sw + innerGap + ctx.measureText(item.label).width + itemGap;
+  });
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'alphabetic';
+  const ox = pad;
+  const oy = topH;
+  results.forEach((res, ri) => {
+    res.forEach((state, ci) => {
+      const x = ox + ci * (tileSize + gap);
+      const y = oy + ri * (tileSize + gap);
+      ctx.fillStyle = colors[state];
+      ctx.beginPath();
+      ctx.roundRect(x, y, tileSize, tileSize, 4);
+      ctx.fill();
+    });
+  });
+  ctx.fillStyle = '#9a7078';
+  ctx.font = '11px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('#isucfvmb  #cyclonenation  #marchingband', w / 2, topH + gridH + 30);
+  ctx.fillStyle = '#F1BE48';
+  ctx.font = 'bold 12px sans-serif';
+  ctx.fillText('Play at bandle.iastate.band', w / 2, topH + gridH + 52);
+  c.toBlob(blob => {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `bandle-day-${currentDay + 1}.png`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast('Image saved!');
+  });
+});
+
 document.getElementById('theme-toggle').addEventListener('click', () => {
   const isDark = document.documentElement.classList.toggle('dark');
   localStorage.setItem('bandle_theme', isDark ? 'dark' : 'light');

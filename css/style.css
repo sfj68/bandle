@@ -568,23 +568,36 @@ html.dark .icon-moon { display: none; }
   font-family: monospace;
 }
 
-#copy-btn {
+#modal-buttons {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+#copy-btn, #image-btn {
   font-family: var(--font);
   font-size: 0.82rem;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  padding: 12px 24px;
+  padding: 12px 16px;
   border-radius: 4px;
   border: none;
-  background: var(--cardinal);
-  color: #fff;
   cursor: pointer;
-  width: 100%;
-  margin-bottom: 10px;
+  flex: 1;
 }
 
-#copy-btn:hover {
+#copy-btn {
+  background: var(--cardinal);
+  color: #fff;
+}
+
+#image-btn {
+  background: var(--gold);
+  color: #4a0610;
+}
+
+#copy-btn:hover, #image-btn:hover {
   opacity: 0.88;
 }
 
