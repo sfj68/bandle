@@ -242,7 +242,7 @@ function toast(msg, dur = 1800) {
 }
 
 function buildShareGrid() {
-  const map = { correct: '🟥', present: '🟨', absent: '⬛' };
+  const map = { correct: '🟥', present: '🟨', absent: '⬜' };
   return results.map((res, ri) => {
     let l = res.map(r => map[r]).join('');
     if (ri === MAX_GUESSES - 1 && hintUsed) l += ' 🌪️';
@@ -285,8 +285,13 @@ document.getElementById('copy-btn').addEventListener('click', () => {
   const word = getWord();
   const won = guesses[guesses.length - 1] === word;
   const score = won ? `${guesses.length}/${MAX_GUESSES}` : `X/${MAX_GUESSES}`;
-  const text = `Bandle — Day ${currentDay + 1}\n${score}${hintUsed ? ' 🌪️' : ''}\n\n${buildShareGrid()}\n\nISUCF'V'MB Cyclone Marching Band`;
+  const text = `Bandle — Day ${currentDay + 1}\n${score}${hintUsed ? ' 🌪️' : ''}\n\n${buildShareGrid()}\n\n#isucfvmb #cyclonenation #marchingband\n\nLearn more about the Cyclone Marching Band at https://iastate.band/home`;
   navigator.clipboard.writeText(text).then(() => toast('Copied!')).catch(() => toast('Copy failed'));
+});
+
+document.getElementById('theme-toggle').addEventListener('click', () => {
+  const isDark = document.documentElement.classList.toggle('dark');
+  localStorage.setItem('bandle_theme', isDark ? 'dark' : 'light');
 });
 
 document.getElementById('hint-btn').addEventListener('click', () => {
