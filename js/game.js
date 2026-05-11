@@ -165,12 +165,23 @@ function updateHintUI() {
   }
 }
 
+function updateDayBlurb() {
+  const el = document.getElementById('day-blurb');
+  if (currentDay >= 7) {
+    el.style.display = 'block';
+    el.textContent = "We've already revealed our 2026 Show Themes in the first seven days of Bandle — but the fun doesn't stop there! Keep playing with new band-themed words every day.";
+  } else {
+    el.style.display = 'none';
+  }
+}
+
 function renderAll() {
   buildGrid();
   renderGuesses();
   renderCurrentGuess();
   renderKeyboard();
   renderDayNav();
+  updateDayBlurb();
   updateHintUI();
   updateSolvedBanner();
 }

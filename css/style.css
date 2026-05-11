@@ -163,6 +163,18 @@ html.dark .icon-moon { display: none; }
   margin-top: 2px;
 }
 
+/* DAY BLURB */
+#day-blurb {
+  display: none;
+  font-size: 0.68rem;
+  line-height: 1.5;
+  color: var(--subtext);
+  text-align: center;
+  max-width: 340px;
+  padding: 0 16px;
+  margin-bottom: 10px;
+}
+
 /* SOLVED BANNER */
 #solved-banner {
   display: none;
