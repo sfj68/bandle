@@ -165,6 +165,10 @@ function updateHintUI() {
   }
 }
 
+function updateResetBtn() {
+  document.getElementById('reset-btn').style.display = gameOver ? 'inline-block' : 'none';
+}
+
 function updateDayBlurb() {
   const el = document.getElementById('day-blurb');
   if (currentDay < 7) {
@@ -184,6 +188,7 @@ function renderAll() {
   renderDayNav();
   updateDayBlurb();
   updateHintUI();
+  updateResetBtn();
   updateSolvedBanner();
 }
 
@@ -232,6 +237,7 @@ function submitGuess() {
     renderKeyboard();
     renderCurrentGuess();
     updateHintUI();
+    updateResetBtn();
     renderDayNav();
     updateSolvedBanner();
   }, wordLen * 80 + 50);
@@ -311,6 +317,13 @@ document.getElementById('hint-btn').addEventListener('click', () => {
   saveState();
   toast(`Hint: ${getHint()}`, 2500);
   updateHintUI();
+});
+
+document.getElementById('reset-btn').addEventListener('click', () => {
+  localStorage.removeItem(storageKey(currentDay));
+  loadState();
+  renderAll();
+  toast('Day reset');
 });
 
 document.getElementById('prev-day').addEventListener('click', () => {

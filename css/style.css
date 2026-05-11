@@ -318,6 +318,27 @@ html.dark .icon-moon { display: none; }
   color: var(--subtext);
 }
 
+#reset-btn {
+  font-family: var(--font);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 6px 14px;
+  border: 1px solid var(--subtext);
+  border-radius: 2px;
+  background: transparent;
+  color: var(--subtext);
+  cursor: pointer;
+  display: none;
+  transition: border-color 0.1s, color 0.1s;
+}
+
+#reset-btn:hover {
+  border-color: var(--text);
+  color: var(--text);
+}
+
 /* KEYBOARD */
 #keyboard {
   display: flex;
