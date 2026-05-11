@@ -217,13 +217,32 @@ document.addEventListener('keydown', e => {
   handleKey(e.key);
 });
 
-function submitGuess() {
+const wordCache = new Set();
+
+async function checkWord(w) {
+  if (wordCache.has(w)) return true;
+  try {
+    const res = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${w.toLowerCase()}`);
+    if (res.ok) { wordCache.add(w); return true; }
+    return false;
+  } catch (e) { return true; }
+}
+
+let submitting = false;
+
+async function submitGuess() {
+  if (submitting) return;
   const word = getWord();
   const wordLen = word.length;
   if (currentGuess.length < wordLen) { shakeRow(guesses.length); toast('Not enough letters'); return; }
   const guessStr = currentGuess.join('');
   const isAnswer = WORDS.some(w => w[0] === guessStr);
-  if (!isAnswer && !DICT.has(guessStr)) { shakeRow(guesses.length); toast('Not in word list'); return; }
+  if (!isAnswer) {
+    submitting = true;
+    const valid = await checkWord(guessStr);
+    submitting = false;
+    if (!valid) { shakeRow(guesses.length); toast('Not in word list'); return; }
+  }
   const result = computeResult(guessStr, word);
   updateKeyStates(guessStr, result);
   guesses.push(guessStr);
