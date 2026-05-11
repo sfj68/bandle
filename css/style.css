@@ -141,7 +141,7 @@ html.dark .icon-moon { display: none; }
 
 .link-btn-gold:hover {
   background: var(--gold);
-  color: #000;
+  color: #4a0610;
 }
 
 /* DAY NAV */
@@ -212,6 +212,35 @@ html.dark .icon-moon { display: none; }
   padding: 0 16px;
   margin-bottom: 10px;
 }
+
+/* COLOR LEGEND */
+#color-legend {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--subtext);
+}
+
+.legend-swatch {
+  width: 14px;
+  height: 14px;
+  border-radius: 2px;
+}
+
+.legend-correct { background: var(--correct); }
+.legend-present { background: var(--present); }
+.legend-absent { background: var(--absent); }
 
 /* SOLVED BANNER */
 #solved-banner {
@@ -335,7 +364,7 @@ html.dark .icon-moon { display: none; }
 
 #hint-btn:hover {
   background: var(--gold);
-  color: #000;
+  color: #4a0610;
 }
 
 #hint-display {
