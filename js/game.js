@@ -37,6 +37,7 @@ function getDayDate(dayIndex) {
 function getWord() { return WORDS[currentDay][0]; }
 function getHint() { return WORDS[currentDay][1]; }
 function getDesc() { return WORDS[currentDay][2] || ''; }
+function getGapAfter() { return WORDS[currentDay][3] ?? -1; }
 
 function computeResult(guess, answer) {
   const result = Array(answer.length).fill('absent');
@@ -62,6 +63,7 @@ function updateKeyStates(guess, result) {
 
 function buildGrid() {
   const word = getWord();
+  const gapAfter = getGapAfter();
   const container = document.getElementById('grid-container');
   container.innerHTML = '';
   for (let r = 0; r < MAX_GUESSES; r++) {
@@ -73,6 +75,11 @@ function buildGrid() {
       tile.className = 'tile';
       tile.id = `tile-${r}-${c}`;
       row.appendChild(tile);
+      if (c === gapAfter) {
+        const spacer = document.createElement('div');
+        spacer.className = 'tile-gap';
+        row.appendChild(spacer);
+      }
     }
     container.appendChild(row);
   }

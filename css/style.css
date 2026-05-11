@@ -271,6 +271,10 @@ html.dark .icon-moon { display: none; }
   align-items: center;
 }
 
+.tile-gap {
+  width: calc(var(--tile-size) * 0.3);
+}
+
 .tile {
   width: var(--tile-size);
   height: var(--tile-size);
