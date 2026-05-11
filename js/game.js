@@ -218,14 +218,27 @@ document.addEventListener('keydown', e => {
 });
 
 const wordCache = new Set();
+const badCache = new Set();
 
 async function checkWord(w) {
-  if (wordCache.has(w)) return true;
+  const lower = w.toLowerCase();
+  if (wordCache.has(lower)) return true;
+  if (badCache.has(lower)) return false;
   try {
-    const res = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${w.toLowerCase()}`);
-    if (res.ok) { wordCache.add(w); return true; }
-    return false;
-  } catch (e) { return true; }
+    const res = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${lower}`);
+    if (res.ok) { wordCache.add(lower); return true; }
+    if (res.status === 404) { badCache.add(lower); return false; }
+    // Non-404 error (rate limit, server error): retry once after delay
+    await new Promise(r => setTimeout(r, 500));
+    const res2 = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${lower}`);
+    if (res2.ok) { wordCache.add(lower); return true; }
+    if (res2.status === 404) { badCache.add(lower); return false; }
+    // Still failing after retry — accept leniently so game stays playable
+    return true;
+  } catch (e) {
+    // Network error (API down) — accept leniently
+    return true;
+  }
 }
 
 let submitting = false;
@@ -239,7 +252,16 @@ async function submitGuess() {
   const isAnswer = WORDS.some(w => w[0] === guessStr);
   if (!isAnswer) {
     submitting = true;
-    const valid = await checkWord(guessStr);
+    const gapAfter = getGapAfter();
+    let valid;
+    if (gapAfter >= 0) {
+      const part1 = guessStr.slice(0, gapAfter + 1);
+      const part2 = guessStr.slice(gapAfter + 1);
+      const [v1, v2] = await Promise.all([checkWord(part1), checkWord(part2)]);
+      valid = v1 && v2;
+    } else {
+      valid = await checkWord(guessStr);
+    }
     submitting = false;
     if (!valid) { shakeRow(guesses.length); toast('Not in word list'); return; }
   }
