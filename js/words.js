@@ -5,7 +5,7 @@ const WORDS = [
   ["SILVER","🎬","The silver screen turns 25! We're celebrating the iconic films hitting their quarter-century milestone with a show that's as cinematic as it gets. A silver anniversary deserves a silver performance from the Cyclone Marching Band!"],
   ["MYSTERY","🔍","Something's afoot ... but don't worry, we're on the case. The Cyclone Marching Band presents a sleuthy show, and with some help, we'll follow the clues and figure out the mystery together!"],
   ["HEROES","🦸","You don't need to wait until the end of the night to enjoy the \"Heroes\" show from the Cyclone Marching Band this season. It'll be strong, fast, and larger than life!"],
-  ["RECYCLE","♻️","The seniors have spoken! Our CMB seniors hand-pick their favorite moments from the 2026 season, and we recycle them into one big mash-up of a show for our final home game The seniors have spoken! Our CMB seniors hand-pick their favorite moments from the 2026 season, and we recycle them into one big mash-up of a show for our final home game and senior send-off.and senior send-off."],
+  ["RECYCLE","♻️","The seniors have spoken! Our CMB seniors hand-pick their favorite moments from the 2026 season, and we recycle them into one big mash-up of a show for our final home game and senior send-off."],
   ["MARCH","🎵"],
   ["CYCLONE","🌪️"],
   ["TRUMPET","🎺"],
